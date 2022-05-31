@@ -26,7 +26,7 @@ public abstract class Item {
 
     private int stockQuantity;
 
-    @ManyToMany(mappedBy = "items")
+    @ManyToMany(mappedBy = "items", cascade = CascadeType.ALL)
     private List<Category> categories = new ArrayList<>();
 
 }
