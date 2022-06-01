@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public abstract class ItemForm {
 
+    private Long id;
     @NotEmpty(message = "물건 이름은 필수입니다.")
     private String name;
     @NotNull(message = "물건 가격은 필수입니다.")

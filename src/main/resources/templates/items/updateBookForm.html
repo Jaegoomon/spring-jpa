@@ -11,7 +11,7 @@
 
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
-    <form role="form" action="/items/new" th:object="${bookForm}" method="post">
+    <form role="form" th:object="${bookForm}" method="post">
 
         <input type="hidden" th:field="*{id}" />
 
