@@ -46,4 +46,31 @@ class ItemServiceTest {
         assertThat(itemRepository.findOne(savedMovieId)).isEqualTo(movie);
         assertThat(itemRepository.findOne(savedMovieId)).isInstanceOf(Movie.class);
     }
+
+    @Test
+    public void 아이템_수정() {
+        // given
+        Book book = new Book();
+        book.setName("총균쇠");
+        book.setPrice(12000);
+        book.setStockQuantity(20);
+        book.setAuthor("재레드 다이아몬드");
+        book.setIsbn("A1020");
+
+        Long bookId = itemService.saveItem(book);
+
+        // when
+        int updatedPrice = 13000;
+        int updateStockQuantity = 25;
+        itemService.updateItem(bookId, 13000, 25);
+        Book updatedBook = (Book) itemRepository.findOne(bookId);
+
+        // then
+        assertThat(book.getName()).isEqualTo(updatedBook.getName());
+        assertThat(book.getAuthor()).isEqualTo(updatedBook.getAuthor());
+        assertThat(book.getIsbn()).isEqualTo(updatedBook.getIsbn());
+
+        assertThat(updatedBook.getPrice()).isEqualTo(updatedPrice);
+        assertThat(updatedBook.getStockQuantity()).isEqualTo(updateStockQuantity);
+    }
 }
