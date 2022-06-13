@@ -22,7 +22,10 @@ public class OrderRepository {
     }
 
     public List<Order> findAllWithMemberDelivery() {
-        String query = "select o from Order as o join fetch o.member join fetch o.delivery";
+        String query = "select o " +
+                "from Order as o " +
+                "join fetch o.member " +
+                "join fetch o.delivery";
         return em.createQuery(query, Order.class)
                 .getResultList();
     }
