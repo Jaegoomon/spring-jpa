@@ -21,6 +21,12 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
+    public List<Order> findAllWithMemberDelivery() {
+        String query = "select o from Order as o join fetch o.member join fetch o.delivery";
+        return em.createQuery(query, Order.class)
+                .getResultList();
+    }
+
     public List<Order> search(OrderSearch orderSearch) {
 
         if (orderSearch.getMemberName() == "") {
