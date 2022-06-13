@@ -28,6 +28,8 @@ dependencies {
 	// java faker
 	implementation ('com.github.javafaker:javafaker:1.0.2') { exclude module: 'org.yaml' }
 	implementation group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+	// jackson datatype hibernate5
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
