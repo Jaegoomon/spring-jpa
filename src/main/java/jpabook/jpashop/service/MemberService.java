@@ -17,14 +17,21 @@ public class MemberService {
 
     // 회원 가입
     public Long join(Member member) {
-
-        validateDuplicatedMember(member);
+        validateDuplicatedMember(member.getName());
         memberRepository.save(member);
         return member.getId();
     }
 
-    private void validateDuplicatedMember(Member member) {
-        List<Member> findMembers = memberRepository.findByName(member.getName());
+    // 이름 변경
+    public void update(Long memberId, String name) {
+        validateDuplicatedMember(name);
+
+        Member findMember = memberRepository.findOne(memberId);
+        findMember.setName(name);
+    }
+
+    private void validateDuplicatedMember(String name) {
+        List<Member> findMembers = memberRepository.findByName(name);
         if (!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
