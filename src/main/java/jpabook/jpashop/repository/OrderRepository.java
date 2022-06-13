@@ -22,12 +22,40 @@ public class OrderRepository {
     }
 
     public List<Order> search(OrderSearch orderSearch) {
-        return em.createQuery("select o from Order o join o.member m" +
-                        " where o.status = :status" +
-                        " and m.name like :name", Order.class)
-                .setParameter("status", orderSearch.getOrderStatus())
-                .setParameter("name", orderSearch.getMemberName())
-                .setMaxResults(1000)
-                .getResultList();
+
+        if (orderSearch.getMemberName() == "") {
+            orderSearch.setMemberName(null);
+        }
+
+        String query = "select o from Order o join o.member m ";
+
+        if (orderSearch.getMemberName() != null && orderSearch.getOrderStatus() != null) {
+            query += "where o.status = :status ";
+            query += "and m.name like :name ";
+
+            return em.createQuery(query, Order.class)
+                    .setParameter("status", orderSearch.getOrderStatus())
+                    .setParameter("name", orderSearch.getMemberName())
+                    .setMaxResults(1000)
+                    .getResultList();
+        } else if (orderSearch.getMemberName() == null && orderSearch.getOrderStatus() != null) {
+            query += "where o.status = :status";
+
+            return em.createQuery(query, Order.class)
+                    .setParameter("status", orderSearch.getOrderStatus())
+                    .setMaxResults(1000)
+                    .getResultList();
+        } else if (orderSearch.getMemberName() != null && orderSearch.getOrderStatus() == null) {
+            query += "where m.name like :name";
+
+            return em.createQuery(query, Order.class)
+                    .setParameter("name", orderSearch.getMemberName())
+                    .setMaxResults(1000)
+                    .getResultList();
+        } else {
+            return em.createQuery(query, Order.class)
+                    .setMaxResults(1000)
+                    .getResultList();
+        }
     }
 }
