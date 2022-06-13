@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Entity
 @Getter
@@ -35,7 +36,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // order status [ORDER, CANCEL]
 
-    public void setMember(Member member) {
+    public void addMember(Member member) {
         this.member = member;
         member.getOrders().add(this);
     }
@@ -45,7 +46,7 @@ public class Order {
         orderItem.setOrder(this);
     }
 
-    public void setDelivery(Delivery delivery) {
+    public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.setOrder(this);
     }
@@ -55,11 +56,9 @@ public class Order {
      */
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
         Order order = new Order();
-        order.setMember(member);
-        order.setDelivery(delivery);
-        for (OrderItem orderItem : orderItems) {
-            order.addOrderItems(orderItem);
-        }
+        order.addMember(member);
+        order.addDelivery(delivery);
+        Stream.of(orderItems).forEach(orderItem -> order.addOrderItems(orderItem));
         order.setStatus(OrderStatus.ORDER);
         order.setOrderDate(LocalDateTime.now());
         return order;

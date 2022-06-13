@@ -24,8 +24,8 @@ public class OrderController {
 
     @GetMapping("/order")
     public String createFrom(Model model) {
-        List<Member> members = memberService.findMembers();
-        List<Item> items = itemService.findItems();
+        List<Member> members = memberService.findAll();
+        List<Item> items = itemService.findAll();
 
         model.addAttribute("members", members);
         model.addAttribute("items", items);

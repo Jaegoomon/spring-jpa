@@ -31,7 +31,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<Item> findItems() {
+    public List<Item> findAll() {
         return itemRepository.findAll();
     }
 
