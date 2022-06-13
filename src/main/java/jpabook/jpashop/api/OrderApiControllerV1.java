@@ -1,13 +1,18 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * xToOne(ManyToOne, OneToOne)
@@ -25,5 +30,32 @@ public class OrderApiControllerV1 {
     public List<Order> listOrderV1() {
         List<Order> orders = orderRepository.search(new OrderSearch());
         return orders;
+    }
+
+    @GetMapping("/api/v2/orders")
+    public List<OrderDto> listOrderV2() {
+        List<Order> orders = orderRepository.search(new OrderSearch());
+        List<OrderDto> collect = orders.stream()
+                .map(OrderDto::new)
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    @Data
+    static class OrderDto {
+
+        private final Long id;
+        private final String name;
+        private final LocalDateTime orderDate;
+        private final OrderStatus orderStatus;
+        private final Address address;
+
+        public OrderDto(Order order) {
+            id = order.getId();
+            name = order.getMember().getName(); // LAZY
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress(); // LAZY
+        }
     }
 }
