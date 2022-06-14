@@ -30,6 +30,17 @@ public class OrderRepository {
                 .getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        String query = "select o " +
+                "from Order as o " +
+                "join fetch o.member " +
+                "join fetch o.delivery";
+        return em.createQuery(query, Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public List<Order> findAllWithItem() {
         String query = "select distinct o " +
                 "from Order as o " +
