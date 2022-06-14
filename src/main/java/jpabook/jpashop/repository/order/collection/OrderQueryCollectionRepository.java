@@ -43,6 +43,22 @@ public class OrderQueryCollectionRepository {
         return orders;
     }
 
+    public List<OrderQueryCollectionDto> findOrderQueryCollectionDtosV3() {
+        String query = "select new jpabook.jpashop.repository.order.collection.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count) " +
+                "from Order as o " +
+                "join o.member as m " +
+                "join o.delivery as d " +
+                "join o.orderItems as oi " +
+                "join oi.item as i";
+        List<OrderFlatDto> flatDtos = em.createQuery(query, OrderFlatDto.class)
+                .getResultList();
+        Map<Long, List<OrderFlatDto>> flatDtoMap = flatDtos.stream()
+                .collect(Collectors.groupingBy(OrderFlatDto::getId));
+        return flatDtoMap.keySet().stream()
+                .map(k -> new OrderQueryCollectionDto(flatDtoMap.get(k)))
+                .collect(Collectors.toList());
+    }
+
     private List<OrderItemQueryDto> findOrderItems(Long id) {
         String query = "select new jpabook.jpashop.repository.order.collection.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count) " +
                 "from OrderItem as oi " +
