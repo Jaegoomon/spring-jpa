@@ -72,6 +72,11 @@ public class OrderApiControllerV2 {
         return orderQueryCollectionRepository.findOrderQueryCollectionDtos();
     }
 
+    @GetMapping("/api/v5/order-collection")
+    public List<OrderQueryCollectionDto> listOrderV5() {
+        return orderQueryCollectionRepository.findOrderQueryCollectionDtosV2();
+    }
+
     @Data
     static class OrderDto {
 
