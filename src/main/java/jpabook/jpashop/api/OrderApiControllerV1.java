@@ -2,17 +2,16 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.order.qeury.OrderQueryDto;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.repository.order.qeury.OrderQueryRepository;
-import lombok.Data;
+import jpabook.jpashop.service.query.OrderDto;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,7 @@ public class OrderApiControllerV1 {
 
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
+    private final OrderQueryService orderQueryService;
 
     @GetMapping("/api/v1/orders")
     public List<Order> listOrderV1() {
@@ -37,11 +37,7 @@ public class OrderApiControllerV1 {
 
     @GetMapping("/api/v2/orders")
     public List<OrderDto> listOrderV2() {
-        List<Order> orders = orderRepository.search(new OrderSearch());
-        List<OrderDto> collect = orders.stream()
-                .map(OrderDto::new)
-                .collect(Collectors.toList());
-        return collect;
+        return orderQueryService.listOrderByDto();
     }
 
     @GetMapping("/api/v3/orders")
@@ -56,23 +52,5 @@ public class OrderApiControllerV1 {
     @GetMapping("/api/v4/orders")
     public List<OrderQueryDto> listOrderV4() {
         return orderQueryRepository.findOrderDtos();
-    }
-
-    @Data
-    static class OrderDto {
-
-        private final Long id;
-        private final String name;
-        private final LocalDateTime orderDate;
-        private final OrderStatus orderStatus;
-        private final Address address;
-
-        public OrderDto(Order order) {
-            id = order.getId();
-            name = order.getMember().getName(); // LAZY
-            orderDate = order.getOrderDate();
-            orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress(); // LAZY
-        }
     }
 }
