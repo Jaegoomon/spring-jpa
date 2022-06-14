@@ -30,6 +30,17 @@ public class OrderRepository {
                 .getResultList();
     }
 
+    public List<Order> findAllWithItem() {
+        String query = "select distinct o " +
+                "from Order as o " +
+                "join fetch o.member as m " +
+                "join fetch o.delivery as d " +
+                "join fetch o.orderItems as oi " +
+                "join fetch  oi.item";
+        return em.createQuery(query, Order.class)
+                .getResultList();
+    }
+
     public List<Order> search(OrderSearch orderSearch) {
 
         if (orderSearch.getMemberName() == "") {
